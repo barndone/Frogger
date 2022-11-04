@@ -35,7 +35,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="ScrollingObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
