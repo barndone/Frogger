@@ -23,6 +23,7 @@
 
 #include "raylib.h"
 #include "Player.h"
+#include "ScrollingObject.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -40,6 +41,11 @@ int main()
 
     //initialize player
     Player * player = new Player();
+    // Testing - initialize scrolling objects
+    ScrollingObject* LeftToRight = new ScrollingObject(true, false);
+    ScrollingObject* RightToLeft = new ScrollingObject(false, false);
+    
+
     //--------------------------------------------------------------------------------------
 
     // Main game loop
@@ -48,6 +54,8 @@ int main()
         // Update
         //----------------------------------------------------------------------------------
         player->Update();
+        LeftToRight->Update();
+        RightToLeft->Update();
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -56,7 +64,8 @@ int main()
 
         ClearBackground(RAYWHITE);
         player->Draw();
-
+        LeftToRight->Draw();
+        RightToLeft->Draw();
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
@@ -65,6 +74,8 @@ int main()
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
     delete player;
+    delete LeftToRight;
+    delete RightToLeft;
     //--------------------------------------------------------------------------------------
 
     return 0;
