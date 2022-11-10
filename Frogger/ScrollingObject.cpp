@@ -58,9 +58,16 @@ void ScrollingObject::Update()
 
 void ScrollingObject::Draw()
 {
-	DrawRectangle((int)Position.x, (int)Position.y, 50,50,BLUE);
-
-	Vector2 centerPos = { Position.x + 25.0f, Position.y + 25.0f };
-
-	DrawCircleV(centerPos, 2.0f, RED);
+	//	check if the scrolling object is NOT a hazard
+	if (!isHazard)
+	{
+		//if it isn't it's a log!
+		DrawRectangle((int)Position.x, (int)Position.y, 50,50, BROWN);
+	}
+	//	if it is a hazard
+	else
+	{
+		//	it's a car and will kill our poor frog
+		DrawRectangle((int)Position.x, (int)Position.y, 50, 50, DARKGRAY);
+	}
 }

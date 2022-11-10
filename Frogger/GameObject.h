@@ -25,6 +25,11 @@ public:
 		return Position.y;
 	};
 
+	void SetPosition(float x, float y)
+	{
+
+	};
+
 	// Variables:
 protected:
 	Vector2 Position = { 0 , 0 };

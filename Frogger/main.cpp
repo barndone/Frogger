@@ -75,8 +75,7 @@ int main()
                 //  if there is a collision and the object is marked as a hazard:
                 if (scrollingObjects[i]->isHazard)
                 {
-                    //  kill the player, subtract a life, reset pos
-                    //  TODO: implement me
+                    
                 }
                 //  otherwise, it is a platform
                 else
@@ -121,8 +120,12 @@ int main()
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
     delete player;
-    delete LeftToRight;
-    delete RightToLeft;
+
+    for (int j = 0; j < scrollingObjects.size(); j++)
+    {
+        delete scrollingObjects[j];
+    }
+
     //--------------------------------------------------------------------------------------
 
     return 0;
