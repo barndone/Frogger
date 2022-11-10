@@ -37,20 +37,20 @@ int main()
     const int screenHeight = 450;
     const int gridSize = 50;
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "Frog does NOT go splat");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
     //initialize player
     Player * player = new Player();
     // Testing - initialize scrolling objects
-    std::vector<ScrollingObject> scrollingPlatforms;
+    std::vector<ScrollingObject*> scrollingObjects;
 
     ScrollingObject* LeftToRight = new ScrollingObject(true, false);
     ScrollingObject* RightToLeft = new ScrollingObject(false, false);
 
-    scrollingPlatforms.push_back(*LeftToRight);
-    scrollingPlatforms.push_back(*RightToLeft);
+    scrollingObjects.push_back(LeftToRight);
+    scrollingObjects.push_back(RightToLeft);
     
 
     //--------------------------------------------------------------------------------------
@@ -64,13 +64,26 @@ int main()
         LeftToRight->Update();
         RightToLeft->Update();
 
-        //  check if frog is on a platform
-        
-        for (int i = 0; i < scrollingPlatforms.size(); i++)
+        //  iterate through each object in the scrollingObjects vector
+        for (int i = 0; i < scrollingObjects.size(); i++)
         {
-            if (CheckCollisionCircles(player->Position, gridSize / 2.0f, scrollingPlatforms[i].Position, gridSize / 2.0f))
+            //cache the scrolling object center position for easier access during collision detection
+            Vector2 ScrollingObjectCenterPos = { scrollingObjects[i]->GetXPos() + gridSize / 2.0f, scrollingObjects[i]->GetYPos() + gridSize / 2.0f };
+            //  check if the player has collided with any of the objects in the vector
+            if (CheckCollisionCircles(player->GetPosition(), 1.0f, ScrollingObjectCenterPos, gridSize / 2.0f))
             {
-                player->RidingObject(&scrollingPlatforms[i]);
+                //  if there is a collision and the object is marked as a hazard:
+                if (scrollingObjects[i]->isHazard)
+                {
+                    //  kill the player, subtract a life, reset pos
+                    //  TODO: implement me
+                }
+                //  otherwise, it is a platform
+                else
+                {
+                    //  make frog ride that platform
+                    player->RidingObject(scrollingObjects[i]);
+                }
             }
         }
 
@@ -93,13 +106,13 @@ int main()
             }
         }
 
+        
+        for (int j = 0; j < scrollingObjects.size(); j++)
+        {
+            scrollingObjects[j]->Draw();
+        }
+
         player->Draw();
-        LeftToRight->Draw();
-        RightToLeft->Draw();
-
-
-
-
         EndDrawing();
         //----------------------------------------------------------------------------------
     }

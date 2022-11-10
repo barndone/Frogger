@@ -59,4 +59,8 @@ void ScrollingObject::Update()
 void ScrollingObject::Draw()
 {
 	DrawRectangle((int)Position.x, (int)Position.y, 50,50,BLUE);
+
+	Vector2 centerPos = { Position.x + 25.0f, Position.y + 25.0f };
+
+	DrawCircleV(centerPos, 2.0f, RED);
 }

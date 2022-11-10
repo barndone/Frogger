@@ -15,6 +15,8 @@ public:
 	int Lives = 3;		// variable for lives, default to 3
 	float Score = 0.0f;	// variable for score, default to 0f
 
+	Color color = LIME;
+
 	// Methods:
 
 	// Override Method Declarations:
@@ -24,5 +26,6 @@ public:
 	// Unique Method Declarations:
 	//void Respawn();
 	//void OnCollision(GameObject & go);
+	void SetSprite();
 	void RidingObject(ScrollingObject * go);
 };

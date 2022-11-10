@@ -1,6 +1,8 @@
 #include "Player.h"
 #include <iostream>
 
+#include <fstream>
+
 Player::Player()
 {
 	this->Position.x = (GetScreenWidth() / 2) - 25;
@@ -45,11 +47,13 @@ void Player::Update()
 void Player::Draw()
 {
 	//test draw
-	DrawCircleV(Position, 25.0f, PURPLE);
+	DrawCircleV(Position, 25.0f, color);
+
+	//show the location of the center
+	DrawCircleV(Position, 2.0f, RED);
 }
 
-void Player::RidingObject(ScrollingObject* go)
+void Player::RidingObject(ScrollingObject * go)
 {
-	std::cout << "the frog is in fact, on a log" << std::endl;
-	Position.x += go->Direction.x;
+	this->Position.x += go->Direction.x;
 }

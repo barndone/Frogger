@@ -10,8 +10,23 @@ public:
 	GameObject() {}
 	virtual ~GameObject() {}
 
+	Vector2 GetPosition()
+	{
+		return Position;
+	};
+
+	float GetXPos()
+	{
+		return Position.x;
+	};
+
+	float GetYPos()
+	{
+		return Position.y;
+	};
+
 	// Variables:
-public:
+protected:
 	Vector2 Position = { 0 , 0 };
 
 	// Methods:
