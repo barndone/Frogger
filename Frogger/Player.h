@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "ScrollingObject.h"
 
 class Player : public GameObject
 {
@@ -23,4 +24,5 @@ public:
 	// Unique Method Declarations:
 	//void Respawn();
 	//void OnCollision(GameObject & go);
+	void RidingObject(ScrollingObject * go);
 };

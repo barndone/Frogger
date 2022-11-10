@@ -11,7 +11,7 @@ public:
 	virtual ~GameObject() {}
 
 	// Variables:
-protected:
+public:
 	Vector2 Position = { 0 , 0 };
 
 	// Methods:

@@ -1,9 +1,10 @@
 #include "Player.h"
+#include <iostream>
 
 Player::Player()
 {
-	this->Position.x = 50;
-	this->Position.y = 50;
+	this->Position.x = (GetScreenWidth() / 2) - 25;
+	this->Position.y = GetScreenHeight() - 25;		//hard coded to bottom of screen, update with half the height of the player sprite
 }
 
 Player::~Player()
@@ -13,35 +14,42 @@ Player::~Player()
 
 void Player::Update()
 {
-	//check for movement
+	// check for movement
+	// TODO:	constrain movement to the screen!
+	//			implement "frogger-like" movement
+	
 	// move in the negative X direction
-	if (IsKeyDown(KEY_A))
+	if (IsKeyPressed(KEY_A))
 	{
-		Position.x -= 1;
+		Position.x -= 50;
 	}
 
 	// move in the positive X direction
-	if (IsKeyDown(KEY_D))
+	else if (IsKeyPressed(KEY_D))
 	{
-		Position.x += 1;
+		Position.x += 50;
 	}
 
 	// move in the positive Y direction (down the screen)
-	if (IsKeyDown(KEY_S))
+	else if (IsKeyPressed(KEY_S))
 	{
-		Position.y += 1;
+		Position.y += 50;
 	}
 	// move in the negative Y direction (up the screen)
-	if (IsKeyDown(KEY_W))
+	else if (IsKeyPressed(KEY_W))
 	{
-		Position.y -= 1;
+		Position.y -= 50;
 	}
-	//check for collision with scrolling object
-	//	check what kind of scrolling object
 }
 
 void Player::Draw()
 {
 	//test draw
-	DrawCircleV(Position, 20.0f, PURPLE);
+	DrawCircleV(Position, 25.0f, PURPLE);
+}
+
+void Player::RidingObject(ScrollingObject* go)
+{
+	std::cout << "the frog is in fact, on a log" << std::endl;
+	Position.x += go->Direction.x;
 }

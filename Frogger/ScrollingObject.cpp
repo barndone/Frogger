@@ -20,8 +20,9 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool isHazard)
 		Direction = { 1 , 0 };
 		//	set position to left side of screen
 		//	y-component arbitrary for testing
-		Position = { -10, 100};
+		Position = { -50, 100};
 	}
+
 	//otherwise
 	else
 	{
@@ -29,7 +30,7 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool isHazard)
 		Direction = { -1 , 0 };
 		//	set position to the right side of the screen
 		//	again, y-component is arbitrary for testing
-		Position = { (float)GetScreenWidth() + 10 , 200 };
+		Position = { (float)GetScreenWidth() + 50 , 200 };
 	}
 }
 
@@ -44,18 +45,18 @@ void ScrollingObject::Update()
 	Position = Vector2Add(Position, Direction);
 	//check if it has come off of the LEFT side of the screen
 	//	TODO: change the -10/10 to the width of the sprite (when sprites implemented)
-	if (Position.x < -10)
+	if (Position.x < -50)
 	{
 		//if so, re-assign position
-		Position.x = ((float)GetScreenWidth() + 10);
+		Position.x = ((float)GetScreenWidth() + 50);
 	}
-	if (Position.x > GetScreenWidth() + 10)
+	if (Position.x > GetScreenWidth() + 50)
 	{
-		Position.x = -10;
+		Position.x = -50;
 	}
 }
 
 void ScrollingObject::Draw()
 {
-	DrawRectangle((int)Position.x, (int)Position.y, 10,10,BLUE);
+	DrawRectangle((int)Position.x, (int)Position.y, 50,50,BLUE);
 }
