@@ -25,6 +25,7 @@
 #include "Player.h"
 #include "ScrollingObject.h"
 #include "LilyPad.h"
+#include "Background.h"
 #include <vector>
 
 //------------------------------------------------------------------------------------
@@ -34,8 +35,8 @@ int main()
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth = 750;
+    const int screenHeight = 700;
     const int gridSize = 50;
 
     InitWindow(screenWidth, screenHeight, "Frog does NOT go splat");
@@ -55,11 +56,40 @@ int main()
 
     std::vector<LilyPad*> lilyPads;
 
+    std::vector<Background*> backgroundTiles;
+
     LilyPad* testPad = new LilyPad( 0.0f , 0.0f );
 
     lilyPads.push_back(testPad);
-    
-
+    //for each column:
+    for (int width = 0; width < (screenWidth / gridSize); width++)
+    {
+        //for each tile in the column:
+        for (int height = 0; height < screenHeight / gridSize; height++)
+        {
+            //Initilizate background logic:
+            //if height < 7 - water
+            if (height < 7)
+            {
+                //create a background object (water) and add to vector
+                backgroundTiles.push_back(new Background(true, false, width * gridSize, height * gridSize));
+            }
+            //if height == 7, 10, 13 - notroad (sidewalk)
+            else if (height == 7 || height == 10 || height == 13)
+            {
+                //create a background object (sidewalk) and add to vector
+                backgroundTiles.push_back(new Background(false, false, width * gridSize, height * gridSize));
+            }
+            //else - it is road
+            else
+            {
+                //create a background object (road) and add to vector
+                backgroundTiles.push_back(new Background(false, true, width * gridSize, height * gridSize));
+            }
+            
+        }
+    }
+ 
     //--------------------------------------------------------------------------------------
 
     // Main game loop
@@ -127,6 +157,12 @@ int main()
 
         ClearBackground(RAYWHITE);
 
+        //draw each of the background tiles:
+        for (int j = 0; j < backgroundTiles.size(); j++)
+        {
+            backgroundTiles[j]->Draw();
+        }
+
         //draw a grid (testing purposes)
         //for each column section
         for (int width = 0; width < (screenWidth / gridSize); width++)
@@ -172,6 +208,12 @@ int main()
     for (int j = 0; j < lilyPads.size(); j++)
     {
         delete lilyPads[j];
+    }
+
+    //clear memory
+    for (int j = 0; j < backgroundTiles.size(); j++)
+    {
+        delete backgroundTiles[j];
     }
 
     //--------------------------------------------------------------------------------------

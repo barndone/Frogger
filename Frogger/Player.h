@@ -25,6 +25,5 @@ public:
 
 	// Unique Method Declarations:
 	void Respawn();
-	void SetSprite();
 	void RidingObject(ScrollingObject * go);
 };
