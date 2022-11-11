@@ -7,11 +7,13 @@ ScrollingObject::ScrollingObject()
 	Direction = { 1, 0 };
 	//default to not a hazard
 	isHazard = false;
+
+	color = BROWN;
 }
 
 //2 param constructor:
 //	TODO: implement as 3 parameter constructor with texture as third parameter
-ScrollingObject::ScrollingObject(bool IsMovingRight, bool isHazard)
+ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard)
 {
 	//if IsMovingRight is true,
 	if (IsMovingRight)
@@ -31,6 +33,18 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool isHazard)
 		//	set position to the right side of the screen
 		//	again, y-component is arbitrary for testing
 		Position = { (float)GetScreenWidth() + 50 , 200 };
+	}
+
+	//if it is a hazard:
+	if (Hazard)
+	{
+		this->isHazard = Hazard;
+		color = DARKGRAY;
+	}
+	else
+	{
+		this->isHazard = Hazard;
+		color = BROWN;
 	}
 }
 

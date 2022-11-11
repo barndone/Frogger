@@ -24,6 +24,7 @@
 #include "raylib.h"
 #include "Player.h"
 #include "ScrollingObject.h"
+#include "LilyPad.h"
 #include <vector>
 
 //------------------------------------------------------------------------------------
@@ -46,11 +47,17 @@ int main()
     // Testing - initialize scrolling objects
     std::vector<ScrollingObject*> scrollingObjects;
 
-    ScrollingObject* LeftToRight = new ScrollingObject(true, false);
+    ScrollingObject* LeftToRight = new ScrollingObject(true, true);
     ScrollingObject* RightToLeft = new ScrollingObject(false, false);
 
     scrollingObjects.push_back(LeftToRight);
     scrollingObjects.push_back(RightToLeft);
+
+    std::vector<LilyPad*> lilyPads;
+
+    LilyPad* testPad = new LilyPad( 0.0f , 0.0f );
+
+    lilyPads.push_back(testPad);
     
 
     //--------------------------------------------------------------------------------------
@@ -70,12 +77,16 @@ int main()
             //cache the scrolling object center position for easier access during collision detection
             Vector2 ScrollingObjectCenterPos = { scrollingObjects[i]->GetXPos() + gridSize / 2.0f, scrollingObjects[i]->GetYPos() + gridSize / 2.0f };
             //  check if the player has collided with any of the objects in the vector
-            if (CheckCollisionCircles(player->GetPosition(), 1.0f, ScrollingObjectCenterPos, gridSize / 2.0f))
+            //
+            if (CheckCollisionCircles(  player->GetPosition(),                          //position of the player (already centered to grid spaces
+                                        1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
+                                        ScrollingObjectCenterPos,                       //position for the center of the scrolling object
+                                        gridSize / 2.0f))                               //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
             {
                 //  if there is a collision and the object is marked as a hazard:
                 if (scrollingObjects[i]->isHazard)
                 {
-                    
+                    player->Respawn();
                 }
                 //  otherwise, it is a platform
                 else
@@ -84,6 +95,28 @@ int main()
                     player->RidingObject(scrollingObjects[i]);
                 }
             }
+        }
+
+        //  iterate through list of lilypads to see if player is on one of them (same process as above)
+        for (int i = 0; i < lilyPads.size(); i++)
+        {
+            //Cache the center of the LilyPads for collision detection
+            Vector2 LilyPadCenter = { lilyPads[i]->GetXPos() + gridSize / 2.0f, lilyPads[i]->GetYPos() + gridSize / 2.0f };
+            //  collision test is same as above EXCEPT also check if the lilypad is NOT activated
+            if (CheckCollisionCircles(player->GetPosition(),    //position of the player (already centered to grid spaces
+                1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
+                LilyPadCenter,                                  //position for the center of the LilyPad
+                gridSize / 2.0f) &&                             //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
+                !lilyPads[i]->activated)
+            {
+                //  if it is not activated, set it to active and change its color
+                //  reset the player position, increment points
+                lilyPads[i]->activated = true;
+                lilyPads[i]->SetColor(PINK);
+                player->SetPosition(player->RespawnPos);
+                player->Score += 250;
+            }
+
         }
 
         //----------------------------------------------------------------------------------
@@ -101,16 +134,23 @@ int main()
             //draw each row of the column
             for (int height = 0; height < screenHeight / gridSize; height++)
             {
+                //draw the outline of the grid
                 DrawRectangleLines(width * gridSize, height * gridSize, gridSize, gridSize, BLACK);
             }
         }
-
-        
+        //draw each of the scrolling objects (hazards and platforms)
         for (int j = 0; j < scrollingObjects.size(); j++)
         {
             scrollingObjects[j]->Draw();
         }
+        
+        //draw each of the lilypads
+        for (int j = 0; j < lilyPads.size(); j++)
+        {
+            lilyPads[j]->Draw();
+        }
 
+        //draw player last to put on top-most layer
         player->Draw();
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -119,11 +159,19 @@ int main()
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
+    //clear memory
     delete player;
 
+    //clear memory
     for (int j = 0; j < scrollingObjects.size(); j++)
     {
         delete scrollingObjects[j];
+    }
+
+    //clear memory
+    for (int j = 0; j < lilyPads.size(); j++)
+    {
+        delete lilyPads[j];
     }
 
     //--------------------------------------------------------------------------------------

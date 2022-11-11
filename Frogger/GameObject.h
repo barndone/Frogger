@@ -27,12 +27,24 @@ public:
 
 	void SetPosition(float x, float y)
 	{
+		Position.x = x;
+		Position.y = y;
+	};
 
+	void SetPosition(Vector2 V)
+	{
+		Position = V;
+	};
+
+	void SetColor(Color newColor)
+	{
+		color = newColor;
 	};
 
 	// Variables:
 protected:
 	Vector2 Position = { 0 , 0 };
+	Color color = BLACK;
 
 	// Methods:
 	// Draw() abstraction for child gameobjects

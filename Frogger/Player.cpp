@@ -7,6 +7,9 @@ Player::Player()
 {
 	this->Position.x = (GetScreenWidth() / 2) - 25;
 	this->Position.y = GetScreenHeight() - 25;		//hard coded to bottom of screen, update with half the height of the player sprite
+	this->color = LIME;
+
+	this->RespawnPos = Position;
 }
 
 Player::~Player()
@@ -48,12 +51,25 @@ void Player::Draw()
 {
 	//test draw
 	DrawCircleV(Position, 25.0f, color);
-
-	//show the location of the center
-	DrawCircleV(Position, 2.0f, RED);
 }
 
 void Player::RidingObject(ScrollingObject * go)
 {
 	this->Position.x += go->Direction.x;
+}
+
+void Player::Respawn()
+{
+	Lives--;
+	if (Lives < 0)
+	{
+		//GAME OVER
+	}
+	else
+	{
+		//	also remove one of the UI elements for lives
+		//	when we add that
+		//	oh god there's so much to do and so little time
+		Position = RespawnPos;
+	}
 }

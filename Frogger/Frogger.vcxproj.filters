@@ -27,6 +27,9 @@
     <ClInclude Include="ScrollingObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LilyPad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScrollingObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LilyPad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
