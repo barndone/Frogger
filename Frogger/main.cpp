@@ -39,6 +39,8 @@ int main()
     const int screenHeight = 700;
     const int gridSize = 50;
 
+    bool isRiding = false;
+
     InitWindow(screenWidth, screenHeight, "Frog does NOT go splat");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
@@ -73,6 +75,10 @@ int main()
             {
                 //create a background object (water) and add to vector
                 backgroundTiles.push_back(new Background(true, false, width * gridSize, height * gridSize));
+                if (height == 6)
+                {
+                    RightToLeft->SetPosition(screenWidth, height * gridSize);
+                }
             }
             //if height == 7, 10, 13 - notroad (sidewalk)
             else if (height == 7 || height == 10 || height == 13)
@@ -85,6 +91,10 @@ int main()
             {
                 //create a background object (road) and add to vector
                 backgroundTiles.push_back(new Background(false, true, width * gridSize, height * gridSize));
+                if (height == 11)
+                {
+                    LeftToRight->SetPosition(0, height * gridSize);
+                }
             }
             
         }
@@ -123,10 +133,14 @@ int main()
                 {
                     //  make frog ride that platform
                     player->RidingObject(scrollingObjects[i]);
+                    isRiding = true;
                 }
             }
+            else
+            {
+                isRiding = false;
+            }
         }
-
         //  iterate through list of lilypads to see if player is on one of them (same process as above)
         for (int i = 0; i < lilyPads.size(); i++)
         {
@@ -146,7 +160,25 @@ int main()
                 player->SetPosition(player->RespawnPos);
                 player->Score += 250;
             }
+        }
 
+        //  check if the player has entered the water and is NOT riding a log
+        for (int i = 0; i < backgroundTiles.size(); i++)
+        {
+            if (backgroundTiles[i]->GetHazard() == true)
+            {
+                //Cache the center of the tile for collision detection
+                Vector2 tileCenter = { backgroundTiles[i]->GetXPos() + gridSize / 2.0f, backgroundTiles[i]->GetYPos() + gridSize / 2.0f };
+                //  collision test is same as above EXCEPT also check if the player is NOT riding a log
+                if (CheckCollisionCircles(player->GetPosition(),    //position of the player (already centered to grid spaces
+                    1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
+                    tileCenter,                                     //position for the center of the tile
+                    gridSize / 2.0f) &&                             //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
+                    !isRiding)                                      //is the player NOT riding an object
+                {
+                    player->Respawn();
+                }
+            }
         }
 
         //----------------------------------------------------------------------------------
