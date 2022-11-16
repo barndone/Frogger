@@ -6,7 +6,7 @@
 Player::Player()
 {
 	this->Position.x = (GetScreenWidth() / 2);		//hard coded to the half-way point of the x-axis component of the window
-	this->Position.y = GetScreenHeight() - 25;		//hard coded to bottom of screen, update with half the height of the player sprite
+	this->Position.y = GetScreenHeight() - 75;		//hard coded to bottom of screen, update with half the height of the player sprite
 	this->color = LIME;
 
 	this->RespawnPos = Position;

@@ -36,7 +36,7 @@ int main()
     // Initialization
     //--------------------------------------------------------------------------------------
     const int screenWidth = 750;
-    const int screenHeight = 700;
+    const int screenHeight = 750;
     const int gridSize = 50;
 
     bool isRiding = false;
@@ -67,7 +67,7 @@ int main()
     for (int width = 0; width < (screenWidth / gridSize); width++)
     {
         //for each tile in the column:
-        for (int height = 0; height < screenHeight / gridSize; height++)
+        for (int height = 0; height < (screenHeight / gridSize) - 1; height++)
         {
             //Initilizate background logic:
             //if height < 7 - water
@@ -200,7 +200,7 @@ int main()
         for (int width = 0; width < (screenWidth / gridSize); width++)
         {
             //draw each row of the column
-            for (int height = 0; height < screenHeight / gridSize; height++)
+            for (int height = 0; height < (screenHeight / gridSize) - 1; height++)
             {
                 //draw the outline of the grid
                 DrawRectangleLines(width * gridSize, height * gridSize, gridSize, gridSize, BLACK);
