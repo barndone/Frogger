@@ -22,7 +22,7 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard)
 		Direction = { 1 , 0 };
 		//	set position to left side of screen
 		//	y-component arbitrary for testing
-		Position = { -50, 100};
+		Position = {-(float)Width, 100};
 	}
 
 	//otherwise
@@ -32,7 +32,7 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard)
 		Direction = { -1 , 0 };
 		//	set position to the right side of the screen
 		//	again, y-component is arbitrary for testing
-		Position = { (float)GetScreenWidth() + 50 , 200 };
+		Position = { (float)GetScreenWidth() + Width , 200 };
 	}
 
 	//if it is a hazard:
@@ -40,11 +40,13 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard)
 	{
 		this->isHazard = Hazard;
 		color = DARKGRAY;
+		rec.width = 50;
 	}
 	else
 	{
 		this->isHazard = Hazard;
 		color = BROWN;
+		rec.width = 200;
 	}
 }
 
@@ -57,17 +59,35 @@ void ScrollingObject::Update()
 {
 	//update the position by adding the position to the direction
 	Position = Vector2Add(Position, Direction);
+	rec.x = Position.x;
+	rec.y = Position.y;
 	//check if it has come off of the LEFT side of the screen
 	//	TODO: change the -10/10 to the width of the sprite (when sprites implemented)
-	if (Position.x < -50)
+	if (!isHazard)
 	{
-		//if so, re-assign position
-		Position.x = ((float)GetScreenWidth() + 50);
+		if (Position.x < -Width)
+		{
+			//if so, re-assign position
+			Position.x = ((float)GetScreenWidth() + Width);
+		}
+		if (Position.x > GetScreenWidth() + Width)
+		{
+			Position.x = -Width;
+		}
 	}
-	if (Position.x > GetScreenWidth() + 50)
+	else
 	{
-		Position.x = -50;
+		if (Position.x < -50)
+		{
+			//if so, re-assign position
+			Position.x = ((float)GetScreenWidth() + 50);
+		}
+		if (Position.x > GetScreenWidth() + 50)
+		{
+			Position.x = -50;
+		}
 	}
+
 }
 
 void ScrollingObject::Draw()
@@ -76,7 +96,7 @@ void ScrollingObject::Draw()
 	if (!isHazard)
 	{
 		//if it isn't it's a log!
-		DrawRectangle((int)Position.x, (int)Position.y, 50,50, BROWN);
+		DrawRectangle((int)Position.x, (int)Position.y, Width,50, BROWN);
 	}
 	//	if it is a hazard
 	else

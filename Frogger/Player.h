@@ -23,6 +23,8 @@ public:
 	void Draw() override;
 	void Update() override;
 
+	ScrollingObject* Platform = NULL;
+
 	// Unique Method Declarations:
 	void Respawn();
 	void RidingObject(ScrollingObject * go);

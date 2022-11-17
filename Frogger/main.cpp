@@ -41,6 +41,8 @@ int main()
 
     bool isRiding = false;
 
+    float Timer = 0.0f;
+
     InitWindow(screenWidth, screenHeight, "Frog does NOT go splat");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
@@ -49,23 +51,13 @@ int main()
     Player * player = new Player();
     // Testing - initialize scrolling objects
     std::vector<ScrollingObject*> scrollingObjects;
-
-    ScrollingObject* LeftToRight = new ScrollingObject(true, true);
-    ScrollingObject* RightToLeft = new ScrollingObject(false, false);
-
-    scrollingObjects.push_back(LeftToRight);
-    scrollingObjects.push_back(RightToLeft);
-
     std::vector<LilyPad*> lilyPads;
-
     std::vector<Background*> backgroundTiles;
-
-    LilyPad* testPad = new LilyPad( 0.0f , 0.0f );
-
-    lilyPads.push_back(testPad);
     //for each column:
     for (int width = 0; width < (screenWidth / gridSize); width++)
     {
+        //internal counter for scrollingObjects vector iteration
+        int i = 0;
         //for each tile in the column:
         for (int height = 0; height < (screenHeight / gridSize) - 1; height++)
         {
@@ -75,9 +67,34 @@ int main()
             {
                 //create a background object (water) and add to vector
                 backgroundTiles.push_back(new Background(true, false, width * gridSize, height * gridSize));
-                if (height == 6)
+                //even column tiles at height level 0- initialize a lilypad
+
+                if ((height == 0) && (width % 2 == 0))
                 {
-                    RightToLeft->SetPosition(screenWidth, height * gridSize);
+                    lilyPads.push_back(new LilyPad((float)width * gridSize, (float)height * gridSize));
+                }
+
+                //if height is greater than 0: initialize scrolling objects in addition to background Tiles
+                if (height > 0 && width == 0)
+                {
+                    //if the height value is ODD
+                    if (height % 2 == 1)
+                    {
+                        //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
+                        scrollingObjects.push_back(new ScrollingObject(true, false));
+                        //set position to left of screen, at the corresponding height value
+                        scrollingObjects[i]->SetPosition(0, height * gridSize);
+                        i++;
+                    }
+                    //otherwise it is EVEN
+                    else
+                    {
+                        //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
+                        scrollingObjects.push_back(new ScrollingObject(false, false));
+                        //set position to the right of screen at corresponding height value
+                        scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
+                        i++;
+                    }
                 }
             }
             //if height == 7, 10, 13 - notroad (sidewalk)
@@ -91,9 +108,23 @@ int main()
             {
                 //create a background object (road) and add to vector
                 backgroundTiles.push_back(new Background(false, true, width * gridSize, height * gridSize));
-                if (height == 11)
+                //if height is less than 10, CARS GO LEFT
+                if (height < 10 && width == 0)
                 {
-                    LeftToRight->SetPosition(0, height * gridSize);
+                    //initialize a scrolling object that is moving to the LEFT and IS a hazard
+                    scrollingObjects.push_back(new ScrollingObject(false, true));
+                    //set position to the right of screen at corresponding height value
+                    scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
+                    i++;
+                }
+                //OTHERWISE THEY GO RIGHT
+                else if (height > 10 && width == 0)
+                {
+                    //initialize a scrolling object that is moving to the RIGHT and IS a hazard
+                    scrollingObjects.push_back(new ScrollingObject(true, true));
+                    //set position to the right of screen at corresponding height value
+                    scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
+                    i++;
                 }
             }
             
@@ -107,37 +138,48 @@ int main()
     {
         // Update
         //----------------------------------------------------------------------------------
+
+        //Update each of the scrolling objects (hazards and platforms)
+        for (int j = 0; j < scrollingObjects.size(); j++)
+        {
+            scrollingObjects[j]->Update();
+        }
         player->Update();
-        LeftToRight->Update();
-        RightToLeft->Update();
 
         //  iterate through each object in the scrollingObjects vector
         for (int i = 0; i < scrollingObjects.size(); i++)
         {
-            //cache the scrolling object center position for easier access during collision detection
-            Vector2 ScrollingObjectCenterPos = { scrollingObjects[i]->GetXPos() + gridSize / 2.0f, scrollingObjects[i]->GetYPos() + gridSize / 2.0f };
-            //  check if the player has collided with any of the objects in the vector
-            //
-            if (CheckCollisionCircles(  player->GetPosition(),                          //position of the player (already centered to grid spaces
-                                        1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
-                                        ScrollingObjectCenterPos,                       //position for the center of the scrolling object
-                                        gridSize / 2.0f))                               //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
+        //    //cache the scrolling object center position for easier access during collision detection
+        //    Vector2 ScrollingObjectCenterPos = { scrollingObjects[i]->GetXPos() + gridSize / 2.0f, scrollingObjects[i]->GetYPos() + gridSize / 2.0f };
+        //    //  check if the player has collided with any of the objects in the vector
+        //    //
+        //    if (CheckCollisionCircles(  player->GetPosition(),                          //position of the player (already centered to grid spaces
+        //                                1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
+        //                                ScrollingObjectCenterPos,                       //position for the center of the scrolling object
+        //                                gridSize))                                      //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
+        //
+            if (CheckCollisionCircleRec(    player->GetPosition(),                          //position of player (already centered)
+                                            1.0f,                                           //radius of player collision check
+                                            scrollingObjects[i]->rec))                      //rectangle component of scrolling object
             {
-                //  if there is a collision and the object is marked as a hazard:
-                if (scrollingObjects[i]->isHazard)
-                {
-                    player->Respawn();
+                //  if there is a collision and the object is not marked as a hazard:
+                if (scrollingObjects[i]->isHazard == false)
+                {                    
+                    //  make frog ride that platform
+                    isRiding = true;
+                    player->RidingObject(scrollingObjects[i]);
                 }
-                //  otherwise, it is a platform
+                //  otherwise, it is a hazard
                 else
                 {
-                    //  make frog ride that platform
-                    player->RidingObject(scrollingObjects[i]);
-                    isRiding = true;
+                    //so respawn the frog
+                    player->Respawn();
                 }
             }
+            //otherwise, there is no collision
             else
             {
+                //frog is not riding anything
                 isRiding = false;
             }
         }
@@ -174,7 +216,11 @@ int main()
                     1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
                     tileCenter,                                     //position for the center of the tile
                     gridSize / 2.0f) &&                             //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
-                    !isRiding)                                      //is the player NOT riding an object
+                    !CheckCollisionCircleRec(
+                    player->GetPosition(),
+                    1.0f,
+                    player->Platform->rec
+                    ))                                      //is the player NOT riding an object
                 {
                     player->Respawn();
                 }

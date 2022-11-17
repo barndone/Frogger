@@ -24,6 +24,7 @@
     <ProjectGuid>{cde44379-20db-4087-934e-c35a89139da1}</ProjectGuid>
     <RootNamespace>Frogger</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>FroggerNOVERSIONCONTROL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
