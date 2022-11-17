@@ -25,8 +25,8 @@ public:
 public:
 	Vector2 Direction = { 0, 0 };		// Stores the direction the ScrollingObject is moving
 	bool isHazard = false;
-	int Width = 200;
-	Rectangle rec = { Position.x, Position.y, (float)Width, (float)50 };
+
+public:
 	// Methods:
 	// Override Method Declarations:
 	void Draw() override;

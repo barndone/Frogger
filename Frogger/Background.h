@@ -12,14 +12,17 @@ public:
 
 	bool GetHazard();
 	bool GetRoad();
-
+	bool GetActive();
 	void Draw() override;
 	void Update() override;
+
+	void SetActive(bool val);
 
 	//	Variables:
 protected:
 	bool Water = false;
 	bool Road = false;
+	bool Active = true;
 
 
 };

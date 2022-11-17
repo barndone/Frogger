@@ -16,15 +16,11 @@ public:
 	int Score = 0;	// variable for score, default to 0f
 
 	Vector2 RespawnPos = { 0.0f , 0.0f };
-
 	// Methods:
 
 	// Override Method Declarations:
 	void Draw() override;
 	void Update() override;
-
-	ScrollingObject* Platform = NULL;
-
 	// Unique Method Declarations:
 	void Respawn();
 	void RidingObject(ScrollingObject * go);

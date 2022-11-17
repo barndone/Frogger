@@ -1,4 +1,5 @@
 #include "ScrollingObject.h"
+#include <cstdlib>
 
 //default constructor:
 ScrollingObject::ScrollingObject()
@@ -22,7 +23,7 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard)
 		Direction = { 1 , 0 };
 		//	set position to left side of screen
 		//	y-component arbitrary for testing
-		Position = {-(float)Width, 100};
+		Position = {-200, 100};
 	}
 
 	//otherwise
@@ -65,14 +66,14 @@ void ScrollingObject::Update()
 	//	TODO: change the -10/10 to the width of the sprite (when sprites implemented)
 	if (!isHazard)
 	{
-		if (Position.x < -Width)
+		if (Position.x < -200)
 		{
 			//if so, re-assign position
 			Position.x = ((float)GetScreenWidth() + Width);
 		}
 		if (Position.x > GetScreenWidth() + Width)
 		{
-			Position.x = -Width;
+			Position.x = -200;
 		}
 	}
 	else
@@ -96,7 +97,7 @@ void ScrollingObject::Draw()
 	if (!isHazard)
 	{
 		//if it isn't it's a log!
-		DrawRectangle((int)Position.x, (int)Position.y, Width,50, BROWN);
+		DrawRectangle((int)Position.x, (int)Position.y, rec.width, 50, BROWN);
 	}
 	//	if it is a hazard
 	else

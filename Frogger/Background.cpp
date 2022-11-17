@@ -15,6 +15,8 @@ Background::Background(bool isWater, bool isRoad, float x, float y)
 	Road = isRoad;
 	//set the position of the background object using the passed x and y components
 	this->SetPosition(x, y);
+	this->rec.x = x;
+	this->rec.y = y;
 }
 
 Background::~Background()
@@ -30,6 +32,16 @@ bool Background::GetHazard()
 bool Background::GetRoad()
 {
 	return Road;
+}
+
+bool Background::GetActive()
+{
+	return Active;
+}
+
+void Background::SetActive(bool val)
+{
+	Active = val;
 }
 
 void Background::Update()

@@ -27,21 +27,25 @@ void Player::Update()
 	if (IsKeyPressed(KEY_A))
 	{
 		Position.x -= 50;
+		rec.x -= 50;
 	}
 	// move in the positive X direction
 	else if (IsKeyPressed(KEY_D))
 	{
 		Position.x += 50;
+		rec.x += 50;
 	}
 	// move in the positive Y direction (down the screen)
 	else if (IsKeyPressed(KEY_S))
 	{
 		Position.y += 50;
+		rec.y += 50;
 	}
 	// move in the negative Y direction (up the screen)
 	else if (IsKeyPressed(KEY_W))
 	{
 		Position.y -= 50;
+		rec.y -= 50;
 	}
 }
 
@@ -54,7 +58,6 @@ void Player::Draw()
 void Player::RidingObject(ScrollingObject * go)
 {
 	this->Position.x += go->Direction.x;
-	Platform = go;
 }
 
 void Player::Respawn()

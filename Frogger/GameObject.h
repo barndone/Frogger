@@ -10,6 +10,9 @@ public:
 	GameObject() {}
 	virtual ~GameObject() {}
 
+	int Width = 50;
+	Rectangle rec = { Position.x, Position.y, (float)Width, (float)50 };
+
 	Vector2 GetPosition()
 	{
 		return Position;

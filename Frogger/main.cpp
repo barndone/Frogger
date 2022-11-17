@@ -83,7 +83,7 @@ int main()
                         //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
                         scrollingObjects.push_back(new ScrollingObject(true, false));
                         //set position to left of screen, at the corresponding height value
-                        scrollingObjects[i]->SetPosition(0, height * gridSize);
+                        scrollingObjects[i]->SetPosition(-200, height * gridSize);
                         i++;
                     }
                     //otherwise it is EVEN
@@ -138,26 +138,21 @@ int main()
     {
         // Update
         //----------------------------------------------------------------------------------
+        player->Update();
+        for (int i = 0; i < backgroundTiles.size(); i++)
+        {
+            backgroundTiles[i]->SetActive(true);
+        }
 
         //Update each of the scrolling objects (hazards and platforms)
         for (int j = 0; j < scrollingObjects.size(); j++)
         {
             scrollingObjects[j]->Update();
         }
-        player->Update();
-
         //  iterate through each object in the scrollingObjects vector
         for (int i = 0; i < scrollingObjects.size(); i++)
         {
-        //    //cache the scrolling object center position for easier access during collision detection
-        //    Vector2 ScrollingObjectCenterPos = { scrollingObjects[i]->GetXPos() + gridSize / 2.0f, scrollingObjects[i]->GetYPos() + gridSize / 2.0f };
-        //    //  check if the player has collided with any of the objects in the vector
-        //    //
-        //    if (CheckCollisionCircles(  player->GetPosition(),                          //position of the player (already centered to grid spaces
-        //                                1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
-        //                                ScrollingObjectCenterPos,                       //position for the center of the scrolling object
-        //                                gridSize))                                      //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
-        //
+            //check for collision with the player
             if (CheckCollisionCircleRec(    player->GetPosition(),                          //position of player (already centered)
                                             1.0f,                                           //radius of player collision check
                                             scrollingObjects[i]->rec))                      //rectangle component of scrolling object
@@ -176,13 +171,33 @@ int main()
                     player->Respawn();
                 }
             }
-            //otherwise, there is no collision
+            //otherwise, there is no collision with the player
             else
             {
                 //frog is not riding anything
                 isRiding = false;
             }
+
+            //iterate through list of backgroundTile objects
+            for (int j = 0; j < backgroundTiles.size(); j++)
+            {
+                //if the scrolling object comes into contact with the background tile, set the background tile to inactive.
+                if (CheckCollisionRecs(scrollingObjects[i]->rec, backgroundTiles[j]->rec))
+                {
+                    //if the tile is a hazard (water)
+                    if (backgroundTiles[j]->GetHazard() == true)
+                    {
+                        //check if it is active
+                        if (backgroundTiles[j]->GetActive() == true)
+                        {
+                            //if it is, set it to inactive
+                            backgroundTiles[j]->SetActive(false);
+                        }
+                    }
+                }
+            }
         }
+
         //  iterate through list of lilypads to see if player is on one of them (same process as above)
         for (int i = 0; i < lilyPads.size(); i++)
         {
@@ -203,30 +218,24 @@ int main()
                 player->Score += 250;
             }
         }
-
-        //  check if the player has entered the water and is NOT riding a log
+        //  iterate through list of background tiles to see if the player has landed in the water
         for (int i = 0; i < backgroundTiles.size(); i++)
         {
+            //check if the tile is a hazard (water), otherwise do nothing
             if (backgroundTiles[i]->GetHazard() == true)
             {
-                //Cache the center of the tile for collision detection
-                Vector2 tileCenter = { backgroundTiles[i]->GetXPos() + gridSize / 2.0f, backgroundTiles[i]->GetYPos() + gridSize / 2.0f };
-                //  collision test is same as above EXCEPT also check if the player is NOT riding a log
-                if (CheckCollisionCircles(player->GetPosition(),    //position of the player (already centered to grid spaces
-                    1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
-                    tileCenter,                                     //position for the center of the tile
-                    gridSize / 2.0f) &&                             //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
-                    !CheckCollisionCircleRec(
-                    player->GetPosition(),
-                    1.0f,
-                    player->Platform->rec
-                    ))                                      //is the player NOT riding an object
+                //check for player collision
+                //  check if the tile is active
+                //otherwise, do nothing
+                if (backgroundTiles[i]->GetActive() == true &&
+                    CheckCollisionCircleRec(player->GetPosition(), 1.0f,
+                        backgroundTiles[i]->rec))
                 {
+                    //if the player collides with the tile and the tile is active, respawn the player
                     player->Respawn();
                 }
             }
         }
-
         //----------------------------------------------------------------------------------
 
         // Draw
