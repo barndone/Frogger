@@ -312,7 +312,12 @@ void GameStateLoop::Update()
                 lilyPads[i]->activated = true;
                 lilyPads[i]->SetColor(PINK);
                 player->SetPosition(player->RespawnPos);
-                player->Score += 250;
+                player->Score += 250 * (int)(timeLimit - timeElapsed);
+                timeElapsed -= 15.0f;
+                if (timeElapsed < 0.0f)
+                {
+                    timeElapsed = 0.0f;
+                }
                 padsReached++;
 
                 //  ACTIVATE A NEW LILYPAD
@@ -423,7 +428,7 @@ bool GameStateLoop::StateShouldChange()
 
 GameStates GameStateLoop::GetNextGameState()
 {
-    if ((timeLimit - timeElapsed) < 0)
+    if ((timeLimit - timeElapsed) < 0 || player->Lives == 0)
     {
         return EndScreen;
     }

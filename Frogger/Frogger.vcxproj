@@ -148,6 +148,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateLoop.h" />
     <ClInclude Include="LilyPad.h" />
+    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="NextLevelState.h" />
     <ClInclude Include="ScrollingObject.h" />
     <ClInclude Include="GameObject.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="GameLoopState.cpp" />
     <ClCompile Include="LilyPad.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="NextLevelState.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScrollingObject.cpp" />

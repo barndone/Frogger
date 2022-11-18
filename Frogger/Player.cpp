@@ -24,25 +24,25 @@ void Player::Update()
 	//			implement "frogger-like" movement
 	
 	// move in the negative X direction
-	if (IsKeyPressed(KEY_A))
+	if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT))
 	{
 		Position.x -= 50;
 		rec.x -= 50;
 	}
 	// move in the positive X direction
-	else if (IsKeyPressed(KEY_D))
+	else if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT))
 	{
 		Position.x += 50;
 		rec.x += 50;
 	}
 	// move in the positive Y direction (down the screen)
-	else if (IsKeyPressed(KEY_S))
+	else if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN))
 	{
 		Position.y += 50;
 		rec.y += 50;
 	}
 	// move in the negative Y direction (up the screen)
-	else if (IsKeyPressed(KEY_W))
+	else if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP))
 	{
 		Position.y -= 50;
 		rec.y -= 50;
