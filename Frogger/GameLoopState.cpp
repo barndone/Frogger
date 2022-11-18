@@ -92,20 +92,24 @@ void GameStateLoop::Start()
                     //if the height value is ODD
                     if (height % 2 == 1)
                     {
-                        //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
-                        scrollingObjects.push_back(new ScrollingObject(true, false, 1.75f));
                         if (j == 0)
                         {
+                            //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
+                            scrollingObjects.push_back(new ScrollingObject(true, false, 2.0f));
                             //set position to left of screen, at the corresponding height value
                             scrollingObjects[i]->SetPosition(-100, height * gridSize);
                         }
                         else if (j == 1)
                         {
+                            //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
+                            scrollingObjects.push_back(new ScrollingObject(true, false, 1.75f));
                             //set position to left of screen, at the corresponding height value
                             scrollingObjects[i]->SetPosition(-150, height * gridSize);
                         }
                         else if (j == 2)
                         {
+                            //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
+                            scrollingObjects.push_back(new ScrollingObject(true, false, 1.5f));
                             //set position to left of screen, at the corresponding height value
                             scrollingObjects[i]->SetPosition(-200, height * gridSize);
                         }
@@ -114,20 +118,24 @@ void GameStateLoop::Start()
                     //otherwise it is EVEN
                     else
                     {
-                        //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
-                        scrollingObjects.push_back(new ScrollingObject(false, false, 1.0f));
                         if (j == 0)
                         {
+                            //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
+                            scrollingObjects.push_back(new ScrollingObject(false, false, 0.7f));
                             //set position to left of screen, at the corresponding height value
                             scrollingObjects[i]->SetPosition(screenWidth - 100, height * gridSize);
                         }
                         else if (j == 1)
                         {
+                            //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
+                            scrollingObjects.push_back(new ScrollingObject(false, false, 1.0f));
                             //set position to left of screen, at the corresponding height value
                             scrollingObjects[i]->SetPosition(screenWidth - 50, height * gridSize);
                         }
                         else
                         {
+                            //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
+                            scrollingObjects.push_back(new ScrollingObject(false, false, 1.2f));
                             //set position to left of screen, at the corresponding height value
                             scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
                         }
