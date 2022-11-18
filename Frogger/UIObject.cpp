@@ -33,10 +33,10 @@ void UIObject::Update(float timer)
 
 void UIObject::Draw()
 {
-	//draw score here
-	DrawText(TextFormat("Score: %i", Score), rec.x, rec.y, 14, BLACK);
-	//draw lives here
-	DrawText(TextFormat("Lives: %i", playerObj->Lives), rec.x, rec.y + LineBuffer, 14, BLACK);
+	//draw score here (placeholder)
+	//DrawText(TextFormat("Score: %i", Score), rec.x, rec.y, 14, BLACK);
+	//draw lives here (placeholder)
+	//DrawText(TextFormat("Lives: %i", playerObj->Lives), rec.x, rec.y + LineBuffer, 14, BLACK);
 	//draw timer here
 	DrawRectangle(rec.x, rec.y + (2 * LineBuffer), rec.width * ((TimeLimit - Timer) / TimeLimit), LineBuffer, BLACK);
 	
