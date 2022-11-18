@@ -47,6 +47,12 @@ void Player::Update()
 		Position.y -= 50;
 		rec.y -= 50;
 	}
+
+	if (Position.x < 0 || Position.x > GetScreenWidth() ||
+		Position.y < 0 || Position.y > GetScreenHeight() - 50)
+	{
+		Respawn();
+	}
 }
 
 void Player::Draw()
@@ -57,7 +63,7 @@ void Player::Draw()
 
 void Player::RidingObject(ScrollingObject * go)
 {
-	this->Position.x += go->Direction.x;
+	this->Position.x += (go->Direction.x * go->Speed);
 }
 
 void Player::Respawn()
@@ -73,5 +79,7 @@ void Player::Respawn()
 		//	when we add that
 		//	oh god there's so much to do and so little time
 		Position = RespawnPos;
+		rec.x = RespawnPos.x;
+		rec.y = RespawnPos.y;
 	}
 }

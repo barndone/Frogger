@@ -7,7 +7,7 @@ class ScrollingObject : public GameObject
 	// Constructor
 public:
 	ScrollingObject();
-	ScrollingObject(bool IsMovingRight, bool isHazard);
+	ScrollingObject(bool IsMovingRight, bool isHazard, float speed);
 
 		//
 		// if IsMovingRight bool is true:
@@ -25,6 +25,7 @@ public:
 public:
 	Vector2 Direction = { 0, 0 };		// Stores the direction the ScrollingObject is moving
 	bool isHazard = false;
+	float Speed = 1.0f;
 
 public:
 	// Methods:

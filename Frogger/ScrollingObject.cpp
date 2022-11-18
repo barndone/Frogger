@@ -14,7 +14,7 @@ ScrollingObject::ScrollingObject()
 
 //2 param constructor:
 //	TODO: implement as 3 parameter constructor with texture as third parameter
-ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard)
+ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard, float speed)
 {
 	//if IsMovingRight is true,
 	if (IsMovingRight)
@@ -49,6 +49,7 @@ ScrollingObject::ScrollingObject(bool IsMovingRight, bool Hazard)
 		color = BROWN;
 		rec.width = 200;
 	}
+	this->Speed = speed;
 }
 
 ScrollingObject::~ScrollingObject()
@@ -58,14 +59,20 @@ ScrollingObject::~ScrollingObject()
 
 void ScrollingObject::Update()
 {
-	//update the position by adding the position to the direction
-	Position = Vector2Add(Position, Direction);
-	rec.x = Position.x;
-	rec.y = Position.y;
-	//check if it has come off of the LEFT side of the screen
-	//	TODO: change the -10/10 to the width of the sprite (when sprites implemented)
+	//movement is dependant on whther it is a hazard or not:
+	//	cars move faster in the "fast lane" (and faster than logs in general)
+	//	logs move faster in one direction than the other (for this case towards the RIGHT)
 	if (!isHazard)
 	{
+		if (Direction.x == 1)
+		{
+			Position = Vector2Add(Position, Vector2Scale(Direction, Speed));
+		}
+		else
+		{
+			Position = Vector2Add(Position, Vector2Scale(Direction, Speed));
+		}
+		//screen wrap check:
 		if (Position.x < -200)
 		{
 			//if so, re-assign position
@@ -78,6 +85,15 @@ void ScrollingObject::Update()
 	}
 	else
 	{
+		if (Direction.x == 1)
+		{
+			Position = Vector2Add(Position, Vector2Scale(Direction, Speed));
+		}
+		else
+		{
+			Position = Vector2Add(Position, Vector2Scale(Direction, Speed));
+		}
+		//screen wrap check:
 		if (Position.x < -50)
 		{
 			//if so, re-assign position
@@ -88,7 +104,8 @@ void ScrollingObject::Update()
 			Position.x = -50;
 		}
 	}
-
+	rec.x = Position.x;
+	rec.y = Position.y;
 }
 
 void ScrollingObject::Draw()
@@ -97,12 +114,12 @@ void ScrollingObject::Draw()
 	if (!isHazard)
 	{
 		//if it isn't it's a log!
-		DrawRectangle((int)Position.x, (int)Position.y, rec.width, 50, BROWN);
+		DrawRectangle((int)Position.x, (int)Position.y + 5, rec.width, 40, BROWN);
 	}
 	//	if it is a hazard
 	else
 	{
 		//	it's a car and will kill our poor frog
-		DrawRectangle((int)Position.x, (int)Position.y, 50, 50, DARKGRAY);
+		DrawRectangle((int)Position.x, (int)Position.y + 5, 50, 40, DARKGRAY);
 	}
 }
