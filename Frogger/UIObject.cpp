@@ -5,7 +5,7 @@ UIObject::UIObject()
 
 }
 
-UIObject::UIObject(Player* player, float timer, float timeLimit, int x, int y)
+UIObject::UIObject(Player* player, int score, float timer, float timeLimit, int x, int y)
 {
 	playerObj = player;
 	rec.width = GetScreenWidth() - 100;
@@ -13,6 +13,7 @@ UIObject::UIObject(Player* player, float timer, float timeLimit, int x, int y)
 	rec.y = y;
 	Timer = timer;
 	TimeLimit = timeLimit;
+	Score = score;
 }
 
 UIObject::~UIObject()
@@ -33,7 +34,7 @@ void UIObject::Update(float timer)
 void UIObject::Draw()
 {
 	//draw score here
-	DrawText(TextFormat("Score: %i", playerObj->Score), rec.x, rec.y, 14, BLACK);
+	DrawText(TextFormat("Score: %i", Score), rec.x, rec.y, 14, BLACK);
 	//draw lives here
 	DrawText(TextFormat("Lives: %i", playerObj->Lives), rec.x, rec.y + LineBuffer, 14, BLACK);
 	//draw timer here

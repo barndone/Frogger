@@ -8,12 +8,13 @@ int padsReached = 0;
 bool isRiding = false;
 float timeElapsed = 0.0f;
 float timeLimit = 60.0f;
+int Score = 0;
 
 //initialize player
 Player* player = new Player();
 
 //initialize UIObject
-UIObject* ui = new UIObject(player, timeElapsed, timeLimit, 50, screenHeight - 48);
+UIObject* ui = new UIObject(player, Score, timeElapsed, timeLimit, 50, screenHeight - 48);
 
 //initialize scrolling objects vector
 std::vector<ScrollingObject*> scrollingObjects;
@@ -70,9 +71,13 @@ void GameStateLoop::Start()
     {
         timeElapsed = 0.0f;
     }
+    if (padsReached > 0)
+    {
+        padsReached = 0;
+    }
 
     player = new Player();
-    ui = new UIObject(player, timeElapsed, timeLimit, 50, screenHeight - 48);
+    ui = new UIObject(player, Score, timeElapsed, timeLimit, 50, screenHeight - 48);
 
     //for each column:
     for (int width = 0; width < (screenWidth / gridSize); width++)
@@ -320,42 +325,42 @@ void GameStateLoop::Update()
                 }
                 padsReached++;
 
-                //  ACTIVATE A NEW LILYPAD
-                bool newVal = false;
-                //  executes while newVal is false
-                do
-                {
-                    //  get a random value
-                    int newPad = GetRandomValue(0, lilyPads.size() - 1);
-                    //  used within the for loop, if still true after loop execution, will set newVal to true
-                    bool internalCheck = true;
-                    //  check each of the current visible lilypads
-                    for (int j = 0; j < activatedPads.size(); j++)
-                    {
-                        //  if the random value is equal to a value stored within activatedPads
-                        if (newPad == activatedPads[j])
-                        {
-                            //internal check did not pass
-                            internalCheck = false;
-                            //exit the for loop and start again
-                            break;
-                        }
-                        //otherwise the value did not match
-                        else
-                        {
-                            //value does not yet match, so is still true
-                            internalCheck = true;
-                        }
-                    }
-                    //if after executing the for loop internal check is still true
-                    if (internalCheck)
-                    {
-                        //we have a valid lilyPad to activate, set it to visible
-                        lilyPads[newPad]->visible = true;
-                        //set newVal to true to exit do/while loop
-                        newVal = true;
-                    }
-                } while (newVal == false);
+                ////  ACTIVATE A NEW LILYPAD
+                //bool newVal = false;
+                ////  executes while newVal is false
+                //do
+                //{
+                //    //  get a random value
+                //    int newPad = GetRandomValue(0, lilyPads.size() - 1);
+                //    //  used within the for loop, if still true after loop execution, will set newVal to true
+                //    bool internalCheck = true;
+                //    //  check each of the current visible lilypads
+                //    for (int j = 0; j < activatedPads.size(); j++)
+                //    {
+                //        //  if the random value is equal to a value stored within activatedPads
+                //        if (newPad == activatedPads[j])
+                //        {
+                //            //internal check did not pass
+                //            internalCheck = false;
+                //            //exit the for loop and start again
+                //            break;
+                //        }
+                //        //otherwise the value did not match
+                //        else
+                //        {
+                //            //value does not yet match, so is still true
+                //            internalCheck = true;
+                //        }
+                //    }
+                //    //if after executing the for loop internal check is still true
+                //    if (internalCheck)
+                //    {
+                //        //we have a valid lilyPad to activate, set it to visible
+                //        lilyPads[newPad]->visible = true;
+                //        //set newVal to true to exit do/while loop
+                //        newVal = true;
+                //    }
+                //} while (newVal == false);
 
                 
 
@@ -423,7 +428,7 @@ void GameStateLoop::Draw()
 
 bool GameStateLoop::StateShouldChange()
 {
-    return (timeLimit - timeElapsed) < 0 || player->Lives == 0 || padsReached == lilyPads.size();
+    return (timeLimit - timeElapsed) < 0 || player->Lives == 0 || padsReached > 0;
 }
 
 GameStates GameStateLoop::GetNextGameState()
@@ -434,6 +439,7 @@ GameStates GameStateLoop::GetNextGameState()
     }
     else
     {
+        Score += player->Score;
         return NextLevel;
     }
 }
