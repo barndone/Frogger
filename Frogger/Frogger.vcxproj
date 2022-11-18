@@ -144,17 +144,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
+    <ClInclude Include="EndScreenState.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStateLoop.h" />
     <ClInclude Include="LilyPad.h" />
     <ClInclude Include="ScrollingObject.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="UIObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="EndScreenState.cpp" />
+    <ClCompile Include="GameLoopState.cpp" />
     <ClCompile Include="LilyPad.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScrollingObject.cpp" />
+    <ClCompile Include="UIObject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
