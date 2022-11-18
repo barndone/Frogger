@@ -438,7 +438,7 @@ GameStates GameStateLoop::GetNextGameState()
     }
 }
 
-int GetScore()
+int GameStateLoop::GetScore()
 {
     return player->Score;
 }

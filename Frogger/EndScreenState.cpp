@@ -18,7 +18,7 @@ void EndScreenState::Update()
 }
 void EndScreenState::Draw()
 {
-	DrawText("Final Score: ", GetScreenWidth() / 3, GetScreenHeight() / 4, 50, BLACK);
+	DrawText("Final Score: %i", GetScreenWidth() / 4, GetScreenHeight() / 4, 50, BLACK);
     DrawText(TextFormat("Returning to menu in: %i", (int)(timeToWait-timer)), GetScreenWidth() / 4, GetScreenHeight() / 3, 30, BLACK);
 }
 

@@ -12,4 +12,5 @@ public:
 	void Update() override;
 	bool StateShouldChange() override;
 	GameStates GetNextGameState() override;
+	int GetScore();
 };

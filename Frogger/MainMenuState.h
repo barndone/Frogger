@@ -13,4 +13,9 @@ public:
 	void Update() override;
 	bool StateShouldChange() override;
 	GameStates GetNextGameState() override;
+
+protected:
+	Rectangle startButton = {};
+
+	bool ClickedOnOption();
 };

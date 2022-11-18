@@ -25,6 +25,7 @@
 #include "GameStateLoop.h"
 #include "EndScreenState.h"
 #include "NextLevelState.h"
+#include "MainMenuState.h"
 
 
 //------------------------------------------------------------------------------------
@@ -37,12 +38,14 @@ int main()
     const int screenWidth = 750;
     const int screenHeight = 750;
 
+    int Score = 0;
+
     InitWindow(screenWidth, screenHeight, "Frog does NOT go splat");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
     //initialize player
-    GameState *currentGameState = new GameStateLoop();
+    GameState *currentGameState = new MainMenuState();
  
     //--------------------------------------------------------------------------------------
 
@@ -64,9 +67,18 @@ int main()
         //  Manage current Game State
         if (currentGameState->StateShouldChange())
         {
+            GameStateLoop* derivedState = dynamic_cast<GameStateLoop*>(currentGameState);
+            if (dynamic_cast<GameStateLoop*>(currentGameState) != NULL)
+            {
+                Score += derivedState->GetScore();
+            }
             GameStates nextGameState = currentGameState->GetNextGameState();
             switch (nextGameState)
             {
+            case Menu:
+                delete currentGameState;
+                currentGameState = new MainMenuState();
+                break;
             case GameLoop:
                 delete currentGameState;
                 currentGameState = new GameStateLoop();
