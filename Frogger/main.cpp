@@ -24,6 +24,7 @@
 #include "raylib.h"
 #include "GameStateLoop.h"
 #include "EndScreenState.h"
+#include "NextLevelState.h"
 
 
 //------------------------------------------------------------------------------------
@@ -67,11 +68,18 @@ int main()
             switch (nextGameState)
             {
             case GameLoop:
+                delete currentGameState;
                 currentGameState = new GameStateLoop();
                 break;
+            case NextLevel:
+                delete currentGameState;
+                currentGameState = new NextLevelState();
+                break;
             case EndScreen:
+                delete currentGameState;
                 currentGameState = new EndScreenState();
                 break;
+
             }
         }
     }

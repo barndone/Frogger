@@ -3,14 +3,14 @@
 #include "GameState.h"
 #include "GameStateLoop.h"
 
-class EndScreenState : public GameState
+class NextLevelState : public GameState
 {
 public:
 	float timer = 0.0f;
 	float timeToWait = 5.0f;
 
-	EndScreenState();
-	~EndScreenState() override;
+	NextLevelState();
+	~NextLevelState() override;
 	void Start() override;
 	void Draw() override;
 	void Update() override;

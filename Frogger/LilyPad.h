@@ -12,6 +12,7 @@ public:
 
 public:
 	bool activated = false;
+	bool visible = false;
 
 	// Override Method Declarations:
 	void Draw() override;

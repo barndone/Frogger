@@ -9,7 +9,9 @@
 
 enum GameStates
 {
+	Menu,
 	GameLoop,
+	NextLevel,
 	EndScreen
 };
 

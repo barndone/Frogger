@@ -27,7 +27,9 @@ void LilyPad::Draw()
 {
 	//position is from the top left corner of the grid-space
 	//	convert position to the center of the circle (x+25, y+25)
-	DrawCircle((int)Position.x + 25, (int)Position.y + 25, 25.0f, color);
-	DrawCircleLines((int)Position.x + 25, (int)Position.y + 25, 25.0f, BLACK);
-	
+	if (visible)
+	{
+		DrawCircle((int)Position.x + 25, (int)Position.y + 25, 25.0f, color);
+		DrawCircleLines((int)Position.x + 25, (int)Position.y + 25, 25.0f, BLACK);
+	}
 }

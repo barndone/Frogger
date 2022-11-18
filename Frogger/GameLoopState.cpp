@@ -7,7 +7,7 @@ int screenHeight = GetScreenHeight();
 int padsReached = 0;
 bool isRiding = false;
 float timeElapsed = 0.0f;
-float timeLimit = 90.0f;
+float timeLimit = 60.0f;
 
 //initialize player
 Player* player = new Player();
@@ -23,6 +23,8 @@ std::vector<LilyPad*> lilyPads;
 
 //initialize background tiles vector
 std::vector<Background*> backgroundTiles;
+
+std::vector<int> activatedPads;
 
 GameStateLoop::GameStateLoop()
 {
@@ -42,18 +44,21 @@ GameStateLoop::~GameStateLoop()
     {
         delete scrollingObjects[j];
     }
+    scrollingObjects.clear();
 
     //clear memory
     for (int j = 0; j < lilyPads.size(); j++)
     {
         delete lilyPads[j];
     }
+    lilyPads.clear();
 
     //clear memory
     for (int j = 0; j < backgroundTiles.size(); j++)
     {
         delete backgroundTiles[j];
     }
+    backgroundTiles.clear();
 
     delete ui;
 }
@@ -61,6 +66,11 @@ GameStateLoop::~GameStateLoop()
 
 void GameStateLoop::Start()
 {
+    if (timeElapsed >= timeLimit)
+    {
+        timeElapsed = 0.0f;
+    }
+
     player = new Player();
     ui = new UIObject(player, timeElapsed, timeLimit, 50, screenHeight - 48);
 
@@ -101,100 +111,118 @@ void GameStateLoop::Start()
                         }
                         else if (j == 1)
                         {
-                            //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
-                            scrollingObjects.push_back(new ScrollingObject(true, false, 1.75f));
-                            //set position to left of screen, at the corresponding height value
-                            scrollingObjects[i]->SetPosition(-150, height * gridSize);
+                        //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
+                        scrollingObjects.push_back(new ScrollingObject(true, false, 1.75f));
+                        //set position to left of screen, at the corresponding height value
+                        scrollingObjects[i]->SetPosition(-150, height * gridSize);
                         }
                         else if (j == 2)
                         {
-                            //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
-                            scrollingObjects.push_back(new ScrollingObject(true, false, 1.5f));
-                            //set position to left of screen, at the corresponding height value
-                            scrollingObjects[i]->SetPosition(-200, height * gridSize);
+                        //initialize a scrolling object that is moving to the RIGHT and is NOT A HAZARD
+                        scrollingObjects.push_back(new ScrollingObject(true, false, 1.5f));
+                        //set position to left of screen, at the corresponding height value
+                        scrollingObjects[i]->SetPosition(-200, height * gridSize);
                         }
                         i++;
                     }
                     //otherwise it is EVEN
                     else
                     {
-                        if (j == 0)
-                        {
-                            //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
-                            scrollingObjects.push_back(new ScrollingObject(false, false, 0.7f));
-                            //set position to left of screen, at the corresponding height value
-                            scrollingObjects[i]->SetPosition(screenWidth - 100, height * gridSize);
-                        }
-                        else if (j == 1)
-                        {
-                            //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
-                            scrollingObjects.push_back(new ScrollingObject(false, false, 1.0f));
-                            //set position to left of screen, at the corresponding height value
-                            scrollingObjects[i]->SetPosition(screenWidth - 50, height * gridSize);
-                        }
-                        else
-                        {
-                            //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
-                            scrollingObjects.push_back(new ScrollingObject(false, false, 1.2f));
-                            //set position to left of screen, at the corresponding height value
-                            scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
-                        }
-                        i++;
-                        j++;
+                    if (j == 0)
+                    {
+                        //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
+                        scrollingObjects.push_back(new ScrollingObject(false, false, 0.7f));
+                        //set position to left of screen, at the corresponding height value
+                        scrollingObjects[i]->SetPosition(screenWidth - 100, height * gridSize);
+                    }
+                    else if (j == 1)
+                    {
+                        //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
+                        scrollingObjects.push_back(new ScrollingObject(false, false, 1.0f));
+                        //set position to left of screen, at the corresponding height value
+                        scrollingObjects[i]->SetPosition(screenWidth - 50, height * gridSize);
+                    }
+                    else
+                    {
+                        //initialize a scrolling object that is moving to the LEFT and IS NOT A HAZARD
+                        scrollingObjects.push_back(new ScrollingObject(false, false, 1.2f));
+                        //set position to left of screen, at the corresponding height value
+                        scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
+                    }
+                    i++;
+                    j++;
                     }
                 }
             }
             //if height == 7, 10, 13 - notroad (sidewalk)
             else if (height == 7 || height == 10 || height == 13)
             {
-                //create a background object (sidewalk) and add to vector
-                backgroundTiles.push_back(new Background(false, false, width * gridSize, height * gridSize));
+            //create a background object (sidewalk) and add to vector
+            backgroundTiles.push_back(new Background(false, false, width * gridSize, height * gridSize));
             }
             //else - it is road
             else
             {
-                //create a background object (road) and add to vector
-                backgroundTiles.push_back(new Background(false, true, width * gridSize, height * gridSize));
-                //if height is less than 10, CARS GO LEFT
-                if (height < 10 && width == 0)
+            //create a background object (road) and add to vector
+            backgroundTiles.push_back(new Background(false, true, width * gridSize, height * gridSize));
+            //if height is less than 10, CARS GO LEFT
+            if (height < 10 && width == 0)
+            {
+                //check for fast lane
+                if (height == 9)
                 {
-                    //check for fast lane
-                    if (height == 9)
-                    {
-                        //initialize a scrolling object that is moving to the LEFT and IS a hazard
-                        //  this one is in the fast lane
-                        scrollingObjects.push_back(new ScrollingObject(false, true, 4.0f));
-                    }
-                    else
-                    {
-                        //initialize a scrolling object that is moving to the LEFT and IS a hazard
-                        scrollingObjects.push_back(new ScrollingObject(false, true, 2.75f));
-                    }
-                    //set position to the right of screen at corresponding height value
-                    scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
-                    i++;
+                    //initialize a scrolling object that is moving to the LEFT and IS a hazard
+                    //  this one is in the fast lane
+                    scrollingObjects.push_back(new ScrollingObject(false, true, 4.0f));
                 }
-                //OTHERWISE THEY GO RIGHT
-                else if (height > 10 && width == 0)
+                else
                 {
-                    //check for fast lane
-                    if (height == 11)
-                    {
-                        //initialize a scrolling object that is moving to the LEFT and IS a hazard
-                        //  this one is in the fast lane
-                        scrollingObjects.push_back(new ScrollingObject(true, true, 4.0f));
-                    }
-                    else
-                    {
-                        //initialize a scrolling object that is moving to the LEFT and IS a hazard
-                        scrollingObjects.push_back(new ScrollingObject(true, true, 2.75f));
-                    }
-                    //set position to the right of screen at corresponding height value
-                    scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
-                    i++;
+                    //initialize a scrolling object that is moving to the LEFT and IS a hazard
+                    scrollingObjects.push_back(new ScrollingObject(false, true, 2.75f));
                 }
+                //set position to the right of screen at corresponding height value
+                scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
+                i++;
             }
+            //OTHERWISE THEY GO RIGHT
+            else if (height > 10 && width == 0)
+            {
+                //check for fast lane
+                if (height == 11)
+                {
+                    //initialize a scrolling object that is moving to the LEFT and IS a hazard
+                    //  this one is in the fast lane
+                    scrollingObjects.push_back(new ScrollingObject(true, true, 4.0f));
+                }
+                else
+                {
+                    //initialize a scrolling object that is moving to the LEFT and IS a hazard
+                    scrollingObjects.push_back(new ScrollingObject(true, true, 2.75f));
+                }
+                //set position to the right of screen at corresponding height value
+                scrollingObjects[i]->SetPosition(screenWidth, height * gridSize);
+                i++;
+            }
+            }
+        }
+    }
 
+    //set a random lilyPad as active
+    //  set all other lilyPads as inactive
+    int visiblePad = GetRandomValue(0, lilyPads.size() - 1);
+    activatedPads.push_back(visiblePad);
+    for (int j = 0; j < lilyPads.size(); j++)
+    {
+        if (j == visiblePad)
+        {
+            lilyPads[j]->activated = false;
+            lilyPads[j]->visible = true;
+        }
+
+        else
+        {
+            lilyPads[j]->activated = false;
+            lilyPads[j]->visible = false;
         }
     }
 }
@@ -267,23 +295,68 @@ void GameStateLoop::Update()
     //  iterate through list of lilypads to see if player is on one of them (same process as above)
     for (int i = 0; i < lilyPads.size(); i++)
     {
-        //Cache the center of the LilyPads for collision detection
-        Vector2 LilyPadCenter = { lilyPads[i]->GetXPos() + gridSize / 2.0f, lilyPads[i]->GetYPos() + gridSize / 2.0f };
-        //  collision test is same as above EXCEPT also check if the lilypad is NOT activated
-        if (CheckCollisionCircles(player->GetPosition(),    //position of the player (already centered to grid spaces
-            1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
-            LilyPadCenter,                                  //position for the center of the LilyPad
-            gridSize / 2.0f) &&                             //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
-            !lilyPads[i]->activated)
+        //is the lilypad visible?
+        if (lilyPads[i]->visible)
         {
-            //  if it is not activated, set it to active and change its color
-            //  reset the player position, increment points
-            lilyPads[i]->activated = true;
-            lilyPads[i]->SetColor(PINK);
-            player->SetPosition(player->RespawnPos);
-            player->Score += 250;
-            padsReached++;
+            //Cache the center of the LilyPads for collision detection
+            Vector2 LilyPadCenter = { lilyPads[i]->GetXPos() + gridSize / 2.0f, lilyPads[i]->GetYPos() + gridSize / 2.0f };
+            //  collision test is same as above EXCEPT also check if the lilypad is NOT activated
+            if (CheckCollisionCircles(player->GetPosition(),    //position of the player (already centered to grid spaces
+                1.0f,                                           //radius of the player collision zone (1.0f to keep the check to the center point)
+                LilyPadCenter,                                  //position for the center of the LilyPad
+                gridSize / 2.0f) &&                             //radius of the object is the gridSize (50) / 2 -> takes up entire bounds of grid
+                !lilyPads[i]->activated)
+            {
+                //  if it is not activated, set it to active and change its color
+                //  reset the player position, increment points
+                lilyPads[i]->activated = true;
+                lilyPads[i]->SetColor(PINK);
+                player->SetPosition(player->RespawnPos);
+                player->Score += 250;
+                padsReached++;
+
+                //  ACTIVATE A NEW LILYPAD
+                bool newVal = false;
+                //  executes while newVal is false
+                do
+                {
+                    //  get a random value
+                    int newPad = GetRandomValue(0, lilyPads.size() - 1);
+                    //  used within the for loop, if still true after loop execution, will set newVal to true
+                    bool internalCheck = true;
+                    //  check each of the current visible lilypads
+                    for (int j = 0; j < activatedPads.size(); j++)
+                    {
+                        //  if the random value is equal to a value stored within activatedPads
+                        if (newPad == activatedPads[j])
+                        {
+                            //internal check did not pass
+                            internalCheck = false;
+                            //exit the for loop and start again
+                            break;
+                        }
+                        //otherwise the value did not match
+                        else
+                        {
+                            //value does not yet match, so is still true
+                            internalCheck = true;
+                        }
+                    }
+                    //if after executing the for loop internal check is still true
+                    if (internalCheck)
+                    {
+                        //we have a valid lilyPad to activate, set it to visible
+                        lilyPads[newPad]->visible = true;
+                        //set newVal to true to exit do/while loop
+                        newVal = true;
+                    }
+                } while (newVal == false);
+
+                
+
+            }
         }
+        //otherwise don't do nothing!
     }
     //  iterate through list of background tiles to see if the player has landed in the water
     for (int i = 0; i < backgroundTiles.size(); i++)
@@ -350,5 +423,17 @@ bool GameStateLoop::StateShouldChange()
 
 GameStates GameStateLoop::GetNextGameState()
 {
-    return EndScreen;
+    if ((timeLimit - timeElapsed) < 0)
+    {
+        return EndScreen;
+    }
+    else
+    {
+        return NextLevel;
+    }
+}
+
+int GetScore()
+{
+    return player->Score;
 }
