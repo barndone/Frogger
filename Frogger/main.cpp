@@ -85,11 +85,11 @@ int main()
                 break;
             case NextLevel:
                 delete currentGameState;
-                currentGameState = new NextLevelState();
+                currentGameState = new NextLevelState(Score);
                 break;
             case EndScreen:
                 delete currentGameState;
-                currentGameState = new EndScreenState();
+                currentGameState = new EndScreenState(Score);
                 break;
 
             }

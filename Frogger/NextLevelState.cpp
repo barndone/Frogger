@@ -1,8 +1,8 @@
 #include "NextLevelState.h"
 
-NextLevelState::NextLevelState()
+NextLevelState::NextLevelState(int score)
 {
-
+    Score += score;
 }
 NextLevelState::~NextLevelState()
 {
@@ -18,7 +18,7 @@ void NextLevelState::Update()
 }
 void NextLevelState::Draw()
 {
-    DrawText("Current Score: ", GetScreenWidth() / 3, GetScreenHeight() / 4, 50, BLACK);
+    DrawText(TextFormat("Current Score: %i", Score), GetScreenWidth() / 4, GetScreenHeight() / 4, 50, BLACK);
     DrawText(TextFormat("Time Until Next Level: %i", (int)(timeToWait - timer)), GetScreenWidth() / 4, GetScreenHeight() / 3, 30, BLACK);
 }
 

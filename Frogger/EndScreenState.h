@@ -8,8 +8,11 @@ class EndScreenState : public GameState
 public:
 	float timer = 0.0f;
 	float timeToWait = 5.0f;
+protected:
+	int Score = 0;
 
-	EndScreenState();
+public:
+	EndScreenState(int score);
 	~EndScreenState() override;
 	void Start() override;
 	void Draw() override;

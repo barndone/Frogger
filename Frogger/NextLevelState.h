@@ -9,7 +9,11 @@ public:
 	float timer = 0.0f;
 	float timeToWait = 5.0f;
 
-	NextLevelState();
+protected:
+	int Score = 0;
+
+public:
+	NextLevelState(int score);
 	~NextLevelState() override;
 	void Start() override;
 	void Draw() override;
